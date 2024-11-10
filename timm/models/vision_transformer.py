@@ -25,6 +25,7 @@ Hacked together by / Copyright 2020, Ross Wightman
 """
 import logging
 import math
+import numpy as np
 from collections import OrderedDict
 from functools import partial
 from typing import Callable, List, Optional, Sequence, Tuple, Union
@@ -486,7 +487,7 @@ class VisionTransformer(nn.Module):
             self.patch_drop = nn.Identity()
         self.norm_pre = norm_layer(embed_dim) if pre_norm else nn.Identity()
 
-        dpr = [x.item() for x in torch.linspace(0, drop_path_rate, depth)]  # stochastic depth decay rule
+        dpr =  np.linspace(0, drop_path_rate, depth).tolist()  # stochastic depth decay rule
         self.blocks = nn.Sequential(*[
             block_fn(
                 dim=embed_dim,

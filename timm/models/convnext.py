@@ -39,6 +39,7 @@ Modifications and additions for timm hacked together by / Copyright 2022, Ross W
 
 from collections import OrderedDict
 from functools import partial
+import numpy as np
 from typing import Callable, Optional, Tuple, Union
 
 import torch
@@ -324,7 +325,8 @@ class ConvNeXt(nn.Module):
             stem_stride = 4
 
         self.stages = nn.Sequential()
-        dp_rates = [x.tolist() for x in torch.linspace(0, drop_path_rate, sum(depths)).split(depths)]
+        dp_rates = np.split(np.linspace(0, drop_path_rate, sum(depths)), np.cumsum(depths)[:-1])
+        dp_rates = [list(x) for x in dp_rates]
         stages = []
         prev_chs = dims[0]
         curr_stride = stem_stride
